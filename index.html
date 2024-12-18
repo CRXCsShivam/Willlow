@@ -1,0 +1,131 @@
+// HTML Structure
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer">
+    <title>CRXC</title>
+    
+    <!-- Shaka Player Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.1/shaka-player.ui.min.js" crossorigin="anonymous"></script>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.1/controls.min.css" crossorigin="anonymous">
+    
+    <style>
+        img {
+            position: relative;
+            right: 130px;
+            bottom: 10px;
+            margin: auto;
+            max-width: 20%;
+            max-height: 20%;
+            object-fit: contain;
+            pointer-events: none;
+        }
+        .shaka-spinner-container {
+            display: none;
+        }
+        .uc {
+            pointer-events: none;
+        }
+        body {
+            background-color: #000;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Message Display Script -->
+    
+
+    <!-- Video Player Container -->
+    <div data-shaka-player-container style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
+        <video autoplay muted data-shaka-player id="video" poster="https://i.ibb.co/x7jXd29/InShot-20241215-002653932.jpg" style="width:100%;height:100%"></video>
+    </div>
+
+    <!-- Player Initialization Script -->
+    <script>
+        // Prompt for more links
+        if (confirm('Join For More Links!')) {
+            window.location.href = 'https://t.me/+IXCKFIL7DE80MDc9';
+        }
+
+        // Initialize Shaka Player
+        async function init() {
+            const video = document.getElementById('video');
+            const ui = video.ui;
+            const controls = ui.getControls();
+            const player = controls.getPlayer();
+
+            // Configure DRM
+            player.configure({
+                drm: {
+                    clearKeys: {
+                        '59ed8dc9d4a48857ef8e5865919496cc': '349deda8b7fdd1da71b70d3680bd8b16'
+                    }
+                }
+            });
+
+            // Configure UI
+            ui.configure({
+                controlPanelElements: [
+                    'play_pause',
+                    'time_and_duration',
+                    'spacer',
+                    'mute',
+                    'volume',
+                    'fullscreen',
+                    'overflow_menu',
+                    'quality'
+                ],
+                volumeBarColors: {
+                    base: 'rgb(255, 255, 1)',
+                    level: 'rgb(0, 255, 0)'
+                },
+                seekBarColors: {
+                    base: 'rgba(0, 128, 128, 1)',
+                    buffered: 'rgba(0, 0, 0)',
+                    played: 'rgb(255, 0, 0)'
+                }
+            });
+
+            // Store references
+            window.player = player;
+            window.ui = ui;
+
+            // Add error handlers
+            player.addEventListener('error', onPlayerErrorEvent);
+            controls.addEventListener('error', onUIErrorEvent);
+
+            // Load content
+            try {
+                await player.load('https://content-asedge.toiimg.com/live/channels/WILLHD-3-v1-c1p3-s80/index.m3u8');
+                console.log('The video has now been loaded!');
+            } catch (error) {
+                onPlayerError(error);
+            }
+        }
+
+        // Error handling functions
+        function onPlayerErrorEvent(event) {
+            onPlayerError(event.detail);
+        }
+
+        function onPlayerError(error) {
+            console.error('Error code', error.code, 'object', error);
+        }
+
+        function onUIErrorEvent(event) {
+            onPlayerError(event.detail);
+        }
+
+        function initFailed() {
+            console.error('Unable to load the UI library!');
+        }
+
+        // Add event listeners
+        document.addEventListener('shaka-ui-loaded', init);
+        document.addEventListener('shaka-ui-load-failed', initFailed);
+    </script>
+</body>
+</html>
